@@ -1,10 +1,12 @@
+#include "process.h"
+
 #include <unistd.h>
+
 #include <cctype>
 #include <sstream>
 #include <string>
 #include <vector>
 
-#include "process.h"
 #include "linux_parser.h"
 
 using std::string;
@@ -15,13 +17,13 @@ using std::vector;
 int Process::Pid() { return pid_; }
 
 // Done: Return this process's CPU utilization
-float Process::CpuUtilization() { 
+float Process::CpuUtilization() {
   long active_time, up_time, time_since_process_started;
-  active_time = LinuxParser::ActiveJiffies(pid_)/ sysconf(_SC_CLK_TCK);
+  active_time = LinuxParser::ActiveJiffies(pid_) / sysconf(_SC_CLK_TCK);
   up_time = LinuxParser::UpTime();
   time_since_process_started = up_time - uptime_;
-  cpu_util_ = (float)active_time/(float)time_since_process_started;
-  return cpu_util_; 
+  cpu_util_ = (float)active_time / (float)time_since_process_started;
+  return cpu_util_;
 }
 
 // Done: Return the command that generated this process
@@ -34,13 +36,15 @@ string Process::Ram() { return LinuxParser::Ram(pid_); }
 string Process::User() { return LinuxParser::User(pid_); }
 
 // Done: Return the age of this process (in seconds)
-long int Process::UpTime() { 
-  uptime_ = LinuxParser::UpTime(pid_)/ sysconf(_SC_CLK_TCK);
-  return uptime_; 
+long int Process::UpTime() {
+  uptime_ = LinuxParser::UpTime(pid_) / sysconf(_SC_CLK_TCK);
+  return uptime_;
 }
 
 // Done: Overload the "less than" comparison operator for Process objects
-bool Process::operator<(Process const& a) const { return this->cpu_util_ < a.GetCpuUtilization()? true:false; }
+bool Process::operator<(Process const& a) const {
+  return this->cpu_util_ < a.GetCpuUtilization() ? true : false;
+}
 
-void Process::SetPid(int id){ pid_ = id;}
-float Process::GetCpuUtilization() const {return cpu_util_;}
+void Process::SetPid(int id) { pid_ = id; }
+float Process::GetCpuUtilization() const { return cpu_util_; }

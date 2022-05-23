@@ -8,11 +8,11 @@ It contains relevant attributes as shown below
 */
 class Process {
  public:
-  int Pid();                               // Done: See src/process.cpp
+  int Pid();  // Done: See src/process.cpp
   void SetPid(int id);
-  std::string User();                      // Done: See src/process.cpp
-  std::string Command();                   // Done: See src/process.cpp
-  float CpuUtilization();                  // Done: See src/process.cpp
+  std::string User();      // Done: See src/process.cpp
+  std::string Command();   // Done: See src/process.cpp
+  float CpuUtilization();  // Done: See src/process.cpp
   float GetCpuUtilization() const;
   std::string Ram();                       // Done: See src/process.cpp
   long int UpTime();                       // Done: See src/process.cpp
@@ -20,10 +20,9 @@ class Process {
 
   // Done: Declare any necessary private members
  private:
-   int pid_{0};
-   long uptime_{0};
-   float cpu_util_{0};
-   
+  int pid_{0};
+  long uptime_{0};
+  float cpu_util_{0};
 };
 
 #endif

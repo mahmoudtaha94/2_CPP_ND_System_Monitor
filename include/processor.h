@@ -7,9 +7,9 @@ class Processor {
 
   // Done: Declare any necessary private members
  private:
- long PrevTotal_{0};
- long PrevIdle_{0};
- long PrevNonIdle_{0};
+  long PrevTotal_{0};
+  long PrevIdle_{0};
+  long PrevNonIdle_{0};
 };
 
 #endif

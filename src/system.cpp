@@ -1,15 +1,17 @@
+#include "system.h"
+
 #include <unistd.h>
+
+#include <algorithm>
 #include <cstddef>
+#include <filesystem>
 #include <set>
 #include <string>
 #include <vector>
-#include <filesystem>
-#include <algorithm>
 
+#include "linux_parser.h"
 #include "process.h"
 #include "processor.h"
-#include "system.h"
-#include "linux_parser.h"
 
 using std::set;
 using std::size_t;
@@ -20,29 +22,29 @@ using std::vector;
 Processor& System::Cpu() { return cpu_; }
 
 // Done: Return a container composed of the system's processes
-vector<Process>& System::Processes() { 
-  for (const auto & entry : std::filesystem::directory_iterator(LinuxParser::kProcDirectory)){
-    try{
+vector<Process>& System::Processes() {
+  for (const auto& entry :
+       std::filesystem::directory_iterator(LinuxParser::kProcDirectory)) {
+    try {
       string proc_path = entry.path();
-      int process_dir = std::stoi(proc_path.substr(6,-1));
+      int process_dir = std::stoi(proc_path.substr(6, -1));
       Process proc;
       proc.SetPid(process_dir);
       bool found = false;
-      for ( unsigned int i=0 ; i < processes_.size();i++ ){
-        if(processes_[i].Pid() == process_dir){
+      for (unsigned int i = 0; i < processes_.size(); i++) {
+        if (processes_[i].Pid() == process_dir) {
           found = true;
           continue;
         }
       }
-      if(!found){
+      if (!found) {
         processes_.push_back(proc);
       }
-    }
-    catch(...){
+    } catch (...) {
       continue;
     }
   }
-  return processes_; 
+  return processes_;
 }
 
 // Done: Return the system's kernel identifier (string)
