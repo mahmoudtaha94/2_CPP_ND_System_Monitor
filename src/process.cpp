@@ -5,29 +5,42 @@
 #include <vector>
 
 #include "process.h"
+#include "linux_parser.h"
 
 using std::string;
 using std::to_string;
 using std::vector;
 
-// TODO: Return this process's ID
-int Process::Pid() { return 0; }
+// Done: Return this process's ID
+int Process::Pid() { return pid_; }
 
-// TODO: Return this process's CPU utilization
-float Process::CpuUtilization() { return 0; }
+// Done: Return this process's CPU utilization
+float Process::CpuUtilization() { 
+  long active_time, up_time, time_since_process_started;
+  active_time = LinuxParser::ActiveJiffies(pid_)/ sysconf(_SC_CLK_TCK);
+  up_time = LinuxParser::UpTime();
+  time_since_process_started = up_time - uptime_;
+  cpu_util_ = (float)active_time/(float)time_since_process_started;
+  return cpu_util_; 
+}
 
-// TODO: Return the command that generated this process
-string Process::Command() { return string(); }
+// Done: Return the command that generated this process
+string Process::Command() { return LinuxParser::Command(pid_); }
 
-// TODO: Return this process's memory utilization
-string Process::Ram() { return string(); }
+// Done: Return this process's memory utilization
+string Process::Ram() { return LinuxParser::Ram(pid_); }
 
-// TODO: Return the user (name) that generated this process
-string Process::User() { return string(); }
+// Done: Return the user (name) that generated this process
+string Process::User() { return LinuxParser::User(pid_); }
 
-// TODO: Return the age of this process (in seconds)
-long int Process::UpTime() { return 0; }
+// Done: Return the age of this process (in seconds)
+long int Process::UpTime() { 
+  uptime_ = LinuxParser::UpTime(pid_)/ sysconf(_SC_CLK_TCK);
+  return uptime_; 
+}
 
-// TODO: Overload the "less than" comparison operator for Process objects
-// REMOVE: [[maybe_unused]] once you define the function
-bool Process::operator<(Process const& a[[maybe_unused]]) const { return true; }
+// Done: Overload the "less than" comparison operator for Process objects
+bool Process::operator<(Process const& a) const { return this->cpu_util_ < a.GetCpuUtilization()? true:false; }
+
+void Process::SetPid(int id){ pid_ = id;}
+float Process::GetCpuUtilization() const {return cpu_util_;}
