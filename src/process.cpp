@@ -18,10 +18,9 @@ int Process::Pid() { return pid_; }
 
 // Done: Return this process's CPU utilization
 float Process::CpuUtilization() {
-  long active_time, up_time, time_since_process_started;
+  long active_time, time_since_process_started;
   active_time = LinuxParser::ActiveJiffies(pid_) / sysconf(_SC_CLK_TCK);
-  up_time = LinuxParser::UpTime();
-  time_since_process_started = up_time - uptime_;
+  time_since_process_started = uptime_;
   cpu_util_ = (float)active_time / (float)time_since_process_started;
   return cpu_util_;
 }
@@ -37,13 +36,13 @@ string Process::User() { return LinuxParser::User(pid_); }
 
 // Done: Return the age of this process (in seconds)
 long int Process::UpTime() {
-  uptime_ = LinuxParser::UpTime(pid_) / sysconf(_SC_CLK_TCK);
+  uptime_ = LinuxParser::UpTime() - (LinuxParser::UpTime(pid_) / sysconf(_SC_CLK_TCK));
   return uptime_;
 }
 
 // Done: Overload the "less than" comparison operator for Process objects
 bool Process::operator<(Process const& a) const {
-  return this->cpu_util_ < a.GetCpuUtilization() ? true : false;
+  return this->cpu_util_ < a.GetCpuUtilization();
 }
 
 void Process::SetPid(int id) { pid_ = id; }

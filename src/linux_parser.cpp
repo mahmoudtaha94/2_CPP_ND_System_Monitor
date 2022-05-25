@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 using std::stof;
 using std::string;
@@ -171,6 +172,10 @@ string LinuxParser::Command(int pid) {
   if (filestream.is_open()) {
     std::getline(filestream, line);
   }
+  if(line.length()> 40){
+    line.substr(40, -1);
+    line = line +"...";
+  }
   return line;
 }
 
@@ -189,7 +194,7 @@ string LinuxParser::Ram(int pid) {
       }
     }
   }
-  return to_string(value);
+  return to_string(value/1024);
 }
 
 // Done: Read and return the user ID associated with a process
@@ -221,10 +226,11 @@ string LinuxParser::User(int pid) {
       for (int i = 0; i < 3; i++) {
         pos = line.find(delimiter);
         token = line.substr(0, pos);
+        line = line.substr(pos+1,-1);
         if (i == 0) name = token;
         if (i == 1) x = token;
         if (i == 2) uid = token;
-      }
+      }      
       if (uid == LinuxParser::Uid(pid)) break;
     }
   }
