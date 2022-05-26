@@ -24,6 +24,7 @@ Processor& System::Cpu() { return cpu_; }
 
 // Done: Return a container composed of the system's processes
 vector<Process>& System::Processes() {
+  processes_.clear();
   for (const auto& entry :
        fs::directory_iterator(LinuxParser::kProcDirectory)) {
     try {
@@ -31,14 +32,7 @@ vector<Process>& System::Processes() {
       int process_dir = std::stoi(proc_path.substr(6, -1));
       Process proc;
       proc.SetPid(process_dir);
-      bool found = false;
-      for (unsigned int i = 0; i < processes_.size(); i++) {
-        if (processes_[i].Pid() == process_dir) {
-          found = true;
-          continue;
-        }
-      }
-      if (!found) {
+      if(proc.User() != "" && proc.Command() != ""){
         processes_.push_back(proc);
       }
     } catch (...) {

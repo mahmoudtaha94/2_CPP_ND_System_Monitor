@@ -20,8 +20,12 @@ int Process::Pid() { return pid_; }
 float Process::CpuUtilization() {
   long active_time, time_since_process_started;
   active_time = LinuxParser::ActiveJiffies(pid_) / sysconf(_SC_CLK_TCK);
-  time_since_process_started = uptime_;
-  cpu_util_ = (float)active_time / (float)time_since_process_started;
+  time_since_process_started = Process::UpTime();
+  if(active_time == 0 || time_since_process_started==0){
+    cpu_util_ = 0;
+  }else{
+    cpu_util_ = (float)active_time / (float)time_since_process_started;
+  }
   return cpu_util_;
 }
 

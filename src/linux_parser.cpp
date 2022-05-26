@@ -173,7 +173,7 @@ string LinuxParser::Command(int pid) {
     std::getline(filestream, line);
   }
   if(line.length()> 40){
-    line = line.substr(40, -1);
+    line = line.substr(0, 40);
     line = line +"...";
   }
   return line;
